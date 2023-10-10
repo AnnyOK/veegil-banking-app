@@ -53,7 +53,7 @@ export class UsersController {
       //   console.log(accessToken, 'access token');
       return { token: accessToken };
     } catch (err) {
-      throw new Error(err + 'not completet');
+      throw new Error(err + 'not completed');
     }
   }
 

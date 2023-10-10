@@ -1,7 +1,4 @@
-// src/auth/auth.service.ts
-
 import { Injectable } from '@nestjs/common';
-// import { JwtService } from '@nestjs/jwt';
 import { JwtService } from './jwt.service';
 import { UsersService } from '../users/users.service'; // Import your users service
 import { User } from '../users/user.model'; // Import your user model
@@ -16,13 +13,16 @@ export class AuthService {
   ) {}
 
   async register(user: User): Promise<User> {
-    // Implement user registration logic here
-    // You'll need to hash the password before saving it to the database
+    // Implemented user registration logic here
+    // I hashed the password before saving it to the database
     // You may want to check if the username is already taken
     // Save the user to the database and return the saved user
+    const isUsernameAvailble = await this.usersService.findByUsername(
+      user.username,
+    );
+    if (isUsernameAvailble) throw new Error('User already taken');
     const hashPassword = await bcrypt.hash(user.password, 10);
     user.password = hashPassword;
-    console.log(user, 'from authservice');
     return await this.usersService.create(user);
   }
 
@@ -40,7 +40,7 @@ export class AuthService {
 
     const payload = {
       username: validatedUser.username,
-      password: validatedUser.password,
+      // password: validatedUser.password,
       phoneNo: validatedUser.phoneNo,
       email: validatedUser.email,
       id: validatedUser._id,
@@ -56,17 +56,14 @@ export class AuthService {
     // Implement user validation logic here
     // Check if the user exists in your database and if the password is correct
     const existingUser = await this.usersService.findByUsername(user.username);
+    if (!existingUser) return null;
+    // console.log(user.password, existingUser.password, 'password');
     const isValidUser = await bcrypt.compare(
       user.password,
       existingUser.password,
     );
-    if (
-      existingUser &&
-      isValidUser
-      //  &&
-      // existingUser.password === user.password
-    ) {
-      existingUser.password = '';
+    console.log(isValidUser, existingUser.password, 'isUser');
+    if (isValidUser) {
       console.log(existingUser);
       return existingUser;
     }
