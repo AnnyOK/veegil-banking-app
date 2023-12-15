@@ -42,7 +42,11 @@ export class UsersController {
     // return await this.usersService.create(createUserDto as User);
     // return await this.usersService.register(createUserDto);
   }
-
+  @Get('allusers')
+  async getUserAll(): Promise<User[]> {
+    console.log('getUserAll');
+    return await this.usersService.findAll();
+  }
   @Post('login')
   async login(@Body() loginUserDto: LoginUserDto): Promise<{ token: string }> {
     try {
@@ -50,10 +54,10 @@ export class UsersController {
       const { accessToken } = await this.authService.login(
         loginUserDto as User,
       );
-      //   console.log(accessToken, 'access token');
+        // console.log(accessToken, 'access token');
       return { token: accessToken };
     } catch (err) {
-      throw new Error(err + 'not completed');
+      throw new Error(err);
     }
   }
 
@@ -61,10 +65,7 @@ export class UsersController {
   async getUserById(@Param('id') id: string): Promise<User> {
     return await this.usersService.findById(id);
   }
-  @Get('all')
-  async getUserAll(): Promise<User[]> {
-    return await this.usersService.findAll();
-  }
+
   @Patch(':id')
   async updateUser(
     @Param('id') id: string,

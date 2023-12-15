@@ -13,15 +13,24 @@ export class UsersService {
   }
 
   async findByUsername(username: string): Promise<User | null> {
-    console.log(username, 'user saaa');
+    // console.log(username, 'user saaa');
     return await this.userModel.findOne({ username }).exec();
   }
 
   async findById(id: string): Promise<User | null> {
-    return await this.userModel.findById(id).exec();
+    try {
+      return await this.userModel.findById(id).exec();
+    } catch (e) {
+      throw new Error(e.message);
+    }
   }
-  async findAll(): Promise<User[]> {
-    return await this.userModel.find({}).exec();
+  async findAll(): Promise<User[] | []> {
+    console.log('findAll');
+    try {
+      return await this.userModel.find({});
+    } catch (e) {
+      throw new Error(e.message);
+    }
   }
   async update(id: string, updatedUser: User): Promise<User | null> {
     const existingUser = await this.findById(id);
