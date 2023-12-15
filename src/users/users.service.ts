@@ -20,7 +20,9 @@ export class UsersService {
   async findById(id: string): Promise<User | null> {
     return await this.userModel.findById(id).exec();
   }
-
+  async findAll(): Promise<User[]> {
+    return await this.userModel.find({}).exec();
+  }
   async update(id: string, updatedUser: User): Promise<User | null> {
     const existingUser = await this.findById(id);
 

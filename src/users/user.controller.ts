@@ -61,7 +61,10 @@ export class UsersController {
   async getUserById(@Param('id') id: string): Promise<User> {
     return await this.usersService.findById(id);
   }
-
+  @Get('all')
+  async getUserAll(): Promise<User[]> {
+    return await this.usersService.findAll();
+  }
   @Patch(':id')
   async updateUser(
     @Param('id') id: string,
